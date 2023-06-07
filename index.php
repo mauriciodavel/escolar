@@ -29,17 +29,34 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
                     $sql = "SELECT * FROM login WHERE code = '$code' AND senha = '$password'";
                     $result = mysqli_query($conexao, $sql);
                     if (mysqli_num_rows($result) > 0) {
-                        while ($res_1 = mysql_fetch_assoc($result)) {
-                            $status = $res_1['satus'];
-                            $code = $res_1['code'];
-                            $senha = $res_1['senha'];
-                            $nome = $res_1['nome'];
-                            $painel = $res_1['painel'];
-                            
-                            if ($status == 'Inativo') {
-                                echo "<h2> Você está inativo. Procure a Administração! </h2>";
+			while($res_1 = mysqli_fetch_assoc($result)){
+				$status = $res_1['status'];
+				$code = $res_1['code'];
+				$senha = $res_1['senha'];
+				$nome = $res_1['nome'];
+				$painel = $res_1['painel'];
                                 
-                            }
+				if($status == 'Inativo'){
+					echo "<h2> Você está inativo, procure a administração!! </h2>";	
+				}else{
+                                    session_start();
+                                    $_SESSION['code'] = $code;
+                                    $_SESSION['nome'] = $nome;
+                                    $_SESSION['senha'] = $senha;
+                                    $_SESSION['painel'] = $painel;
+                                    
+                                    if ($painel == 'Admin') {
+                                        echo "<script language='javascript'> window.location='admin';</script>";
+                                    } else if($painel == 'Aluno'){
+					echo "<script language='javascript'> window.location='aluno';</script>";	
+                                    }else if($painel == 'Professor'){
+					echo "<script language='javascript'> window.location='professor';</script>";	
+                                    }else if($painel == 'Portaria'){
+					echo "<script language='javascript'> window.location='portaria';</script>";	
+                                    }else if($painel == 'Tesouraria'){
+					echo "<script language='javascript'> window.location='tesouraria';</script>";	
+                                    }
+                                }                                
                         }
                     } else {
                         echo "<h2>Código de acesso ou senha incorretos!</h2>";
